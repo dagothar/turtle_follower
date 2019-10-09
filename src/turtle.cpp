@@ -52,8 +52,8 @@ Turtle::Turtle(const ros::NodeHandle& nh, const QImage& turtle_image, const QPoi
   pen_.setWidth(3);
 
   velocity_sub_ = nh_.subscribe("cmd_vel", 1, &Turtle::velocityCallback, this);
-  pose_pub_ = nh_.advertise<Pose>("pose", 1);
-  color_pub_ = nh_.advertise<Color>("color_sensor", 1);
+  pose_pub_ = nh_.advertise<turtlesim::Pose>("pose", 1);
+  color_pub_ = nh_.advertise<turtlesim::Color>("color_sensor", 1);
   set_pen_srv_ = nh_.advertiseService("set_pen", &Turtle::setPenCallback, this);
   teleport_relative_srv_ = nh_.advertiseService("teleport_relative", &Turtle::teleportRelativeCallback, this);
   teleport_absolute_srv_ = nh_.advertiseService("teleport_absolute", &Turtle::teleportAbsoluteCallback, this);
@@ -168,7 +168,7 @@ bool Turtle::update(double dt, QPainter& path_painter, const QImage& path_image,
   pos_.setY(std::min(std::max(static_cast<double>(pos_.y()), 0.0), static_cast<double>(canvas_height)));
 
   // Publish pose of the turtle
-  Pose p;
+  turtlesim::Pose p;
   p.x = pos_.x();
   p.y = canvas_height - pos_.y();
   p.theta = orient_;
@@ -178,7 +178,7 @@ bool Turtle::update(double dt, QPainter& path_painter, const QImage& path_image,
 
   // Figure out (and publish) the color underneath the turtle
   {
-    Color color;
+    turtlesim::Color color;
     QRgb pixel = path_image.pixel((pos_ * meter_).toPoint());
     color.r = qRed(pixel);
     color.g = qGreen(pixel);

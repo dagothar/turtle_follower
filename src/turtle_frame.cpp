@@ -182,10 +182,8 @@ void TurtleFrame::clear()
   std::string background_image_path;
   QImage background_image;
 
-  if (nh_.hasParam("background_image")) {
-    nh_.getParam("background_image", background_image_path);
-    background_image.load(QString::fromStdString(background_image_path));
-  }
+  nh_.getParam("background_image", background_image_path);
+  background_image.load(QString::fromStdString(background_image_path));
   
   if (background_image.isNull()) {
     int r = DEFAULT_BG_R;
