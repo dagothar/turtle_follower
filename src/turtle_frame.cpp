@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "turtle_follower/turtle_frame.h"
+#include "turtlefollower/turtle_frame.h"
 
 #include <QPointF>
 
@@ -39,7 +39,7 @@
 #define DEFAULT_BG_G 0x56
 #define DEFAULT_BG_B 0xff
 
-namespace turtle_follower
+namespace turtlefollower
 {
 
 TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
@@ -63,12 +63,24 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   nh_.setParam("background_r", DEFAULT_BG_R);
   nh_.setParam("background_g", DEFAULT_BG_G);
   nh_.setParam("background_b", DEFAULT_BG_B);
-  nh_.setParam("background_image", ros::package::getPath("turtle_follower") + "/images/map.png");
+  nh_.setParam("background_image", ros::package::getPath("turtlefollower") + "/images/map.png");
 
   QVector<QString> turtles;
-  turtles.append("follower.png");
+  turtles.append("box-turtle.png");
+  turtles.append("robot-turtle.png");
+  turtles.append("sea-turtle.png");
+  turtles.append("diamondback.png");
+  turtles.append("electric.png");
+  turtles.append("fuerte.png");
+  turtles.append("groovy.png");
+  turtles.append("hydro.svg");
+  turtles.append("indigo.svg");
+  turtles.append("jade.png");
+  turtles.append("kinetic.png");
+  turtles.append("lunar.png");
+  turtles.append("melodic.png");
 
-  QString images_path = (ros::package::getPath("turtle_follower") + "/images/").c_str();
+  QString images_path = (ros::package::getPath("turtlesim") + "/images/").c_str();
   for (int i = 0; i < turtles.size(); ++i)
   {
     QImage img;
@@ -85,7 +97,7 @@ TurtleFrame::TurtleFrame(QWidget* parent, Qt::WindowFlags f)
   spawn_srv_ = nh_.advertiseService("spawn", &TurtleFrame::spawnCallback, this);
   kill_srv_ = nh_.advertiseService("kill", &TurtleFrame::killCallback, this);
 
-  ROS_INFO("Starting turtle_follower with node name %s", ros::this_node::getName().c_str()) ;
+  ROS_INFO("Starting turtlefollower with node name %s", ros::this_node::getName().c_str()) ;
 
   width_in_meters_ = (width() - 1) / meter_;
   height_in_meters_ = (height() - 1) / meter_;
@@ -97,12 +109,12 @@ TurtleFrame::~TurtleFrame()
   delete update_timer_;
 }
 
-bool TurtleFrame::spawnCallback(turtle_follower::Spawn::Request& req, turtle_follower::Spawn::Response& res)
+bool TurtleFrame::spawnCallback(turtlesim::Spawn::Request& req, turtlesim::Spawn::Response& res)
 {
   std::string name = spawnTurtle(req.name, req.x, req.y, req.theta);
   if (name.empty())
   {
-    ROS_ERROR("A turtled named [%s] already exists", req.name.c_str());
+    ROS_ERROR("A turtle named [%s] already exists", req.name.c_str());
     return false;
   }
 
@@ -111,7 +123,7 @@ bool TurtleFrame::spawnCallback(turtle_follower::Spawn::Request& req, turtle_fol
   return true;
 }
 
-bool TurtleFrame::killCallback(turtle_follower::Kill::Request& req, turtle_follower::Kill::Response&)
+bool TurtleFrame::killCallback(turtlesim::Kill::Request& req, turtlesim::Kill::Response&)
 {
   M_Turtle::iterator it = turtles_.find(req.name);
   if (it == turtles_.end())
@@ -144,7 +156,7 @@ std::string TurtleFrame::spawnTurtle(const std::string& name, float x, float y, 
     do
     {
       std::stringstream ss;
-      ss << "follower" << ++id_counter_;
+      ss << "turtle" << ++id_counter_;
       real_name = ss.str();
     } while (hasTurtle(real_name));
   }
@@ -160,7 +172,7 @@ std::string TurtleFrame::spawnTurtle(const std::string& name, float x, float y, 
   turtles_[real_name] = t;
   update();
 
-  ROS_INFO("Spawning follower [%s] at x=[%f], y=[%f], theta=[%f]", real_name.c_str(), x, y, angle);
+  ROS_INFO("Spawning turtle [%s] at x=[%f], y=[%f], theta=[%f]", real_name.c_str(), x, y, angle);
 
   return real_name;
 }
@@ -243,14 +255,14 @@ void TurtleFrame::updateTurtles()
 
 bool TurtleFrame::clearCallback(std_srvs::Empty::Request&, std_srvs::Empty::Response&)
 {
-  ROS_INFO("Clearing turtle_follower.");
+  ROS_INFO("Clearing turtlesim.");
   clear();
   return true;
 }
 
 bool TurtleFrame::resetCallback(std_srvs::Empty::Request&, std_srvs::Empty::Response&)
 {
-  ROS_INFO("Resetting turtle_follower.");
+  ROS_INFO("Resetting turtlesim.");
   turtles_.clear();
   id_counter_ = 0;
   spawnTurtle("", width_in_meters_ / 2.0, height_in_meters_ / 2.0, 0);

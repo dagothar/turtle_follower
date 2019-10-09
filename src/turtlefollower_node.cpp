@@ -31,7 +31,7 @@
 
 #include <ros/ros.h>
 
-#include "turtle_follower/turtle_frame.h"
+#include "turtlefollower/turtle_frame.h"
 
 class TurtleFollowerApp : public QApplication
 {
@@ -41,13 +41,13 @@ public:
   TurtleFollowerApp(int& argc, char** argv)
     : QApplication(argc, argv)
   {
-    ros::init(argc, argv, "turtle_follower", ros::init_options::NoSigintHandler);
+    ros::init(argc, argv, "turtlefollower", ros::init_options::NoSigintHandler);
     nh_.reset(new ros::NodeHandle);
   }
 
   int exec()
   {
-    turtle_follower::TurtleFrame frame;
+    turtlefollower::TurtleFrame frame;
     frame.show();
 
     return QApplication::exec();

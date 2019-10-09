@@ -46,7 +46,7 @@
 # include "turtle.h"
 #endif
 
-namespace turtle_follower
+namespace turtlefollower
 {
 
 class TurtleFrame : public QFrame
