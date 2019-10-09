@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <package>
-  <name>turtlesim</name>
+  <name>turtle_follower</name>
   <version>0.9.1</version>
   <description>
-    turtlesim is a tool made for teaching ROS and ROS packages.
+    turtle_follower is a tool made for teaching ROS and ROS packages.
   </description>
-  <maintainer email="dthomas@osrfoundation.org">Dirk Thomas</maintainer>
+  <maintainer email="a.wolniakowski@pb.edu.pl">Adam Wolniakowski</maintainer>
   <license>BSD</license>
 
-  <url type="website">http://www.ros.org/wiki/turtlesim</url>
-  <url type="bugtracker">https://github.com/ros/ros_tutorials/issues</url>
-  <url type="repository">https://github.com/ros/ros_tutorials</url>
-  <author>Josh Faust</author>
+  <url type="website"></url>
+  <url type="bugtracker"></url>
+  <url type="repository"></url>
+  <author>Adam Wolniakowski</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 

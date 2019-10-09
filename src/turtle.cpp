@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "turtlesim/turtle.h"
+#include "turtle_follower/turtle.h"
 
 #include <QColor>
 #include <QRgb>
@@ -36,7 +36,7 @@
 #define DEFAULT_PEN_G 0xb8
 #define DEFAULT_PEN_B 0xff
 
-namespace turtlesim
+namespace turtle_follower
 {
 
 Turtle::Turtle(const ros::NodeHandle& nh, const QImage& turtle_image, const QPointF& pos, float orient)
@@ -70,7 +70,7 @@ void Turtle::velocityCallback(const geometry_msgs::Twist::ConstPtr& vel)
   ang_vel_ = vel->angular.z;
 }
 
-bool Turtle::setPenCallback(turtlesim::SetPen::Request& req, turtlesim::SetPen::Response&)
+bool Turtle::setPenCallback(turtle_follower::SetPen::Request& req, turtle_follower::SetPen::Response&)
 {
   pen_on_ = !req.off;
   if (req.off)
@@ -88,13 +88,13 @@ bool Turtle::setPenCallback(turtlesim::SetPen::Request& req, turtlesim::SetPen::
   return true;
 }
 
-bool Turtle::teleportRelativeCallback(turtlesim::TeleportRelative::Request& req, turtlesim::TeleportRelative::Response&)
+bool Turtle::teleportRelativeCallback(turtle_follower::TeleportRelative::Request& req, turtle_follower::TeleportRelative::Response&)
 {
   teleport_requests_.push_back(TeleportRequest(0, 0, req.angular, req.linear, true));
   return true;
 }
 
-bool Turtle::teleportAbsoluteCallback(turtlesim::TeleportAbsolute::Request& req, turtlesim::TeleportAbsolute::Response&)
+bool Turtle::teleportAbsoluteCallback(turtle_follower::TeleportAbsolute::Request& req, turtle_follower::TeleportAbsolute::Response&)
 {
   teleport_requests_.push_back(TeleportRequest(req.x, req.y, req.theta, 0, false));
   return true;

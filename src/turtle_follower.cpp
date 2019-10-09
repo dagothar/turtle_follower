@@ -31,23 +31,23 @@
 
 #include <ros/ros.h>
 
-#include "turtlesim/turtle_frame.h"
+#include "turtle_follower/turtle_frame.h"
 
-class TurtleApp : public QApplication
+class TurtleFollowerApp : public QApplication
 {
 public:
   ros::NodeHandlePtr nh_;
 
-  TurtleApp(int& argc, char** argv)
+  TurtleFollowerApp(int& argc, char** argv)
     : QApplication(argc, argv)
   {
-    ros::init(argc, argv, "turtlesim", ros::init_options::NoSigintHandler);
+    ros::init(argc, argv, "turtle_follower", ros::init_options::NoSigintHandler);
     nh_.reset(new ros::NodeHandle);
   }
 
   int exec()
   {
-    turtlesim::TurtleFrame frame;
+    turtle_follower::TurtleFrame frame;
     frame.show();
 
     return QApplication::exec();
@@ -56,7 +56,7 @@ public:
 
 int main(int argc, char** argv)
 {
-  TurtleApp app(argc, argv);
+  TurtleFollowerApp app(argc, argv);
   return app.exec();
 }
 
