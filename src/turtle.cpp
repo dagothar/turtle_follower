@@ -53,7 +53,8 @@ Turtle::Turtle(const ros::NodeHandle& nh, const QImage& turtle_image, const QPoi
 
   velocity_sub_ = nh_.subscribe("cmd_vel", 1, &Turtle::velocityCallback, this);
   pose_pub_ = nh_.advertise<turtlesim::Pose>("pose", 1);
-  color_pub_ = nh_.advertise<turtlesim::Color>("color_sensor", 1);
+  left_color_pub_ = nh_.advertise<turtlesim::Color>("color_left", 1);
+  right_color_pub_ = nh_.advertise<turtlesim::Color>("color_right", 1);
   set_pen_srv_ = nh_.advertiseService("set_pen", &Turtle::setPenCallback, this);
   teleport_relative_srv_ = nh_.advertiseService("teleport_relative", &Turtle::teleportRelativeCallback, this);
   teleport_absolute_srv_ = nh_.advertiseService("teleport_absolute", &Turtle::teleportAbsoluteCallback, this);
@@ -178,12 +179,30 @@ bool Turtle::update(double dt, QPainter& path_painter, const QImage& path_image,
 
   // Figure out (and publish) the color underneath the turtle
   {
-    turtlesim::Color color;
-    QRgb pixel = path_image.pixel((pos_ * meter_).toPoint());
-    color.r = qRed(pixel);
-    color.g = qGreen(pixel);
-    color.b = qBlue(pixel);
-    color_pub_.publish(color);
+    const float X_OFFSET = 5.0; // pixel offset for the sensor
+    float dx = X_OFFSET * cos(orient_);
+    float dy = X_OFFSET * sin(orient_);
+    
+    QPointF left_pos(pos_.x() - dx, pos_.y() - dy);
+    QPointF right_pos(pos_.x() + dx, pos_.y() + dy);
+    
+    {
+      turtlesim::Color color;
+      QRgb pixel = path_image.pixel((left_pos * meter_).toPoint());
+      color.r = qRed(pixel);
+      color.g = qGreen(pixel);
+      color.b = qBlue(pixel);
+      left_color_pub_.publish(color);
+    }
+    
+    {
+      turtlesim::Color color;
+      QRgb pixel = path_image.pixel((right_pos * meter_).toPoint());
+      color.r = qRed(pixel);
+      color.g = qGreen(pixel);
+      color.b = qBlue(pixel);
+      right_color_pub_.publish(color);
+    }
   }
 
   ROS_DEBUG("[%s]: pos_x: %f pos_y: %f theta: %f", nh_.getNamespace().c_str(), pos_.x(), pos_.y(), orient_);
