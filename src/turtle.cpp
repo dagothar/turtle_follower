@@ -180,8 +180,8 @@ bool Turtle::update(double dt, QPainter& path_painter, const QImage& path_image,
   // Figure out (and publish) the color underneath the turtle
   {
     const float X_OFFSET = 5.0; // pixel offset for the sensor
-    float dx = X_OFFSET * cos(orient_);
-    float dy = X_OFFSET * sin(orient_);
+    float dx = X_OFFSET * cos(orient_) / meter_;
+    float dy = X_OFFSET * sin(orient_) / meter_;
     
     QPointF left_pos(pos_.x() - dx, pos_.y() - dy);
     QPointF right_pos(pos_.x() + dx, pos_.y() + dy);
